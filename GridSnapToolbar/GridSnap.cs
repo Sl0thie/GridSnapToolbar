@@ -8,7 +8,7 @@ using System.IO;
 namespace GridSnapToolbar
 {
     /// <summary>
-    /// GridSnap class manages the toolbar and commands to quick change the grid and snap.
+    /// GridSnap class manages the toolbar and commands to quick change the grid and snap settings in AutoCAD.
     /// </summary>
     public class GridSnap : IExtensionApplication
     {
