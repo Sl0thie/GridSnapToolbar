@@ -99,7 +99,6 @@
   <ItemGroup>
     <None Include="acad.lsp" />
     <None Include="Docs\ObjectModel.md" />
-    <None Include="Docs\README.md" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup />
