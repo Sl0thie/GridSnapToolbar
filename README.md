@@ -10,13 +10,13 @@ It will also set the major grid to 10 for 0.1mm, 1mm, 10mm, 100mm, 1000mm or it 
 
 ## Getting Started
 
-Copy the dll file to AutoCAD's support directory. For example:
+Copy the GridSnapToolbar.dll file and the image files to AutoCAD's support directory. For example:
 
     C:\Program Files\Autodesk\AutoCAD 2018\Support
 
 To load the extension manually, use the `NETLOAD` command in the console and a dialog window will open up where you can choose the extension.
 To automatically load the extension each time you start AutoCAD then copy the acad.lsp file into the support directory as well. 
-This will execute the `NETLOAD`command automatically when AutoCAD starts.
+This will execute the `NETLOAD` command automatically when AutoCAD starts.
 
 ## License
 
