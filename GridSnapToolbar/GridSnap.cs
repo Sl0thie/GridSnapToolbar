@@ -13,7 +13,7 @@ namespace GridSnapToolbar
     public class GridSnap : IExtensionApplication
     {
         /// <summary>
-        /// IExtensionApplication calls this method to initialize the extension.
+        /// AutoCAD calls this method to initialize the extension.
         /// </summary>
         public void Initialize()
         {
@@ -51,7 +51,7 @@ namespace GridSnapToolbar
         }
 
         /// <summary>
-        /// IExtensionApplication calls this method to terminate the extension.
+        /// AutoCAD calls this method to terminate the extension.
         /// </summary>
         public void Terminate()
         {
