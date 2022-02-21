@@ -1,0 +1,88 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>GridSnapToolbar</name>
+    </assembly>
+    <members>
+        <member name="T:GridSnapToolbar.GridSnap">
+            <summary>
+            GridSnap class manages the toolbar and commands to quick change the grid and snap settings in AutoCAD.
+            </summary>
+        </member>
+        <member name="M:GridSnapToolbar.GridSnap.Initialize">
+            <summary>
+            AutoCAD calls this method to initialize the extension.
+            </summary>
+        </member>
+        <member name="M:GridSnapToolbar.GridSnap.Terminate">
+            <summary>
+            AutoCAD calls this method to terminate the extension.
+            </summary>
+        </member>
+        <member name="M:GridSnapToolbar.GridSnap.SnapUnit_0_01_Command">
+            <summary>
+            Method to set the grid and snap to 0.01mm.
+            </summary>
+        </member>
+        <member name="M:GridSnapToolbar.GridSnap.SnapUnit_0_05_Command">
+            <summary>
+            Method to set the grid and snap to 0.05mm.
+            </summary>
+        </member>
+        <member name="M:GridSnapToolbar.GridSnap.SnapUnit_0_1_Command">
+            <summary>
+            Method to set the grid and snap to 0.1mm.
+            </summary>
+        </member>
+        <member name="M:GridSnapToolbar.GridSnap.SnapUnit_0_5_Command">
+            <summary>
+            Method to set the grid and snap to 0.5mm.
+            </summary>
+        </member>
+        <member name="M:GridSnapToolbar.GridSnap.SnapUnit_1_Command">
+            <summary>
+            Method to set the grid and snap to 1mm.
+            </summary>
+        </member>
+        <member name="M:GridSnapToolbar.GridSnap.SnapUnit_5_Command">
+            <summary>
+            Method to set the grid and snap to 5mm.
+            </summary>
+        </member>
+        <member name="M:GridSnapToolbar.GridSnap.SnapUnit_10_Command">
+            <summary>
+            Method to set the grid and snap to 10mm.
+            </summary>
+        </member>
+        <member name="M:GridSnapToolbar.GridSnap.SnapUnit_50_Command">
+            <summary>
+            Method to set the grid and snap to 50mm.
+            </summary>
+        </member>
+        <member name="M:GridSnapToolbar.GridSnap.SnapUnit_100_Command">
+            <summary>
+            Method to set the grid and snap to 100mm.
+            </summary>
+        </member>
+        <member name="M:GridSnapToolbar.GridSnap.SnapUnit_500_Command">
+            <summary>
+            Method to set the grid and snap to 500mm.
+            </summary>
+        </member>
+        <member name="M:GridSnapToolbar.GridSnap.SnapUnit_1000_Command">
+            <summary>
+            Method to set the grid and snap to 1000mm. (1m)
+            </summary>
+        </member>
+        <member name="M:GridSnapToolbar.GridSnap.Test1">
+            <summary>
+            Method to execute test 1.
+            </summary>
+        </member>
+        <member name="M:GridSnapToolbar.GridSnap.Test2">
+            <summary>
+            Method to execute test 2.
+            </summary>
+        </member>
+    </members>
+</doc>
