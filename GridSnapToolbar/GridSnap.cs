@@ -110,10 +110,10 @@ namespace GridSnapToolbar
                     symbol.GridMajor = spacing;
 
                     symbol.SnapIncrements = new Autodesk.AutoCAD.Geometry.Point2d(size , size);
-
-                    doc.Editor.UpdateTiledViewportsFromDatabase();
                 }
                 transaction.Commit();
+
+                doc.Editor.UpdateTiledViewportsFromDatabase();
             }
 
             // Switch back to original view port.
