@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Threading;
 
 // http://docs.autodesk.com/ACD/2010/ENU/AutoCAD%20.NET%20Developer%27s%20Guide/index.html?url=WS1a9193826455f5ff2566ffd511ff6f8c7ca-4363.htm,topicNumber=d0e5006&_ga=2.108075330.1797667990.1645396265-1467573342.1641428789
-
+// https://help.autodesk.com/view/OARX/2022/ENU/?guid=OARX-ManagedRefGuide-_NET_Migration_Guide
 
 [assembly: ExtensionApplication(typeof(GridSnapToolbar.GridSnap))]
 [assembly: CommandClass(typeof(GridSnapToolbar.GridSnap))]
