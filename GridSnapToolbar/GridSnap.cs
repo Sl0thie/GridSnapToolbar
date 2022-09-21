@@ -40,18 +40,19 @@ namespace GridSnapToolbar
             AcadApplication cadApp = (AcadApplication)Autodesk.AutoCAD.ApplicationServices.Application.AcadApplication;
             AcadToolbar tb = cadApp.MenuGroups.Item(0).Toolbars.Add("GridSnap");
             tb.Dock(Autodesk.AutoCAD.Interop.Common.AcToolbarDockStatus.acToolbarDockLeft);
-            
-            button0_01mm = tb.AddToolbarButton(0, "0.01", "Sets the Snap/Grid 0.01mm", "SnapUnit_0_01\n", null);
-            button0_05mm = tb.AddToolbarButton(1, "0.05", "Sets the Snap/Grid 0.05mm", "SnapUnit_0_05\n", null);
-            button0_1mm = tb.AddToolbarButton(2, "0.1", "Sets the Snap/Grid 0.1mm", "SnapUnit_0_1\n", null);
-            button0_5mm = tb.AddToolbarButton(3, "0.5", "Sets the Snap/Grid 0.5mm", "SnapUnit_0_5\n", null);
-            button1mm = tb.AddToolbarButton(4, "1", "Sets the Snap/Grid 1mm", "SnapUnit_1\n", null);
-            button5mm = tb.AddToolbarButton(5, "5", "Sets the Snap/Grid 5mm", "SnapUnit_5\n", null);
-            button10mm = tb.AddToolbarButton(6, "10", "Sets the Snap/Grid 10mm", "SnapUnit_10\n", null);
-            button50mm = tb.AddToolbarButton(7, "50", "Sets the Snap/Grid 50mm", "SnapUnit_50\n", null);
-            button100mm = tb.AddToolbarButton(8, "100", "Sets the Snap/Grid 100mm", "SnapUnit_100\n", null);
-            button500mm = tb.AddToolbarButton(9, "500", "Sets the Snap/Grid 500mm", "SnapUnit_500\n", null);
-            button1000mm = tb.AddToolbarButton(10, "1000", "Sets the Snap/Grid 1000mm", "SnapUnit_1000\n", null);
+
+            // Prefixing \u0003\u0003 to the macro will cancel any others already in progress.
+            button0_01mm = tb.AddToolbarButton(0, "0.01", "Sets the Snap/Grid 0.01mm", "\u0003\u0003SnapUnit_0_01\n", null);
+            button0_05mm = tb.AddToolbarButton(1, "0.05", "Sets the Snap/Grid 0.05mm", "\u0003\u0003SnapUnit_0_05\n", null);
+            button0_1mm = tb.AddToolbarButton(2, "0.1", "Sets the Snap/Grid 0.1mm", "\u0003\u0003SnapUnit_0_1\n", null);
+            button0_5mm = tb.AddToolbarButton(3, "0.5", "Sets the Snap/Grid 0.5mm", "\u0003\u0003SnapUnit_0_5\n", null);
+            button1mm = tb.AddToolbarButton(4, "1", "Sets the Snap/Grid 1mm", "\u0003\u0003SnapUnit_1\n", null);
+            button5mm = tb.AddToolbarButton(5, "5", "Sets the Snap/Grid 5mm", "\u0003\u0003SnapUnit_5\n", null);
+            button10mm = tb.AddToolbarButton(6, "10", "Sets the Snap/Grid 10mm", "\u0003\u0003SnapUnit_10\n", null);
+            button50mm = tb.AddToolbarButton(7, "50", "Sets the Snap/Grid 50mm", "\u0003\u0003SnapUnit_50\n", null);
+            button100mm = tb.AddToolbarButton(8, "100", "Sets the Snap/Grid 100mm", "\u0003\u0003SnapUnit_100\n", null);
+            button500mm = tb.AddToolbarButton(9, "500", "Sets the Snap/Grid 500mm", "\u0003\u0003SnapUnit_500\n", null);
+            button1000mm = tb.AddToolbarButton(10, "1000", "Sets the Snap/Grid 1000mm", "\u0003\u0003SnapUnit_1000\n", null);
 
             SetBitMaps();
         }
@@ -198,7 +199,7 @@ namespace GridSnapToolbar
         /// <summary>
         /// Method to set the grid and snap to 0.01mm.
         /// </summary>
-        [Autodesk.AutoCAD.Runtime.CommandMethod("SNAPUNIT_0_01")]
+        [Autodesk.AutoCAD.Runtime.CommandMethod("SNAPUNIT_0_01", CommandFlags.Modal)]
         public void SnapUnit_0_01_Command()
         {
             SetGrid(0.01, 10);
@@ -207,7 +208,7 @@ namespace GridSnapToolbar
         /// <summary>
         /// Method to set the grid and snap to 0.05mm.
         /// </summary>
-        [Autodesk.AutoCAD.Runtime.CommandMethod("SNAPUNIT_0_05")]
+        [Autodesk.AutoCAD.Runtime.CommandMethod("SNAPUNIT_0_05", CommandFlags.Modal)]
         public void SnapUnit_0_05_Command()
         {
             SetGrid(0.05, 20);
@@ -216,7 +217,7 @@ namespace GridSnapToolbar
         /// <summary>
         /// Method to set the grid and snap to 0.1mm.
         /// </summary>
-        [Autodesk.AutoCAD.Runtime.CommandMethod("SNAPUNIT_0_1")]
+        [Autodesk.AutoCAD.Runtime.CommandMethod("SNAPUNIT_0_1", CommandFlags.Modal)]
         public void SnapUnit_0_1_Command()
         {
             SetGrid(0.1, 10);
@@ -225,7 +226,7 @@ namespace GridSnapToolbar
         /// <summary>
         /// Method to set the grid and snap to 0.5mm.
         /// </summary>
-        [Autodesk.AutoCAD.Runtime.CommandMethod("SNAPUNIT_0_5")]
+        [Autodesk.AutoCAD.Runtime.CommandMethod("SNAPUNIT_0_5", CommandFlags.Modal)]
         public void SnapUnit_0_5_Command()
         {
             SetGrid(0.5, 20);
@@ -234,7 +235,7 @@ namespace GridSnapToolbar
         /// <summary>
         /// Method to set the grid and snap to 1mm.
         /// </summary>
-        [Autodesk.AutoCAD.Runtime.CommandMethod("SNAPUNIT_1")]
+        [Autodesk.AutoCAD.Runtime.CommandMethod("SNAPUNIT_1", CommandFlags.Modal)]
         public void SnapUnit_1_Command()
         {
             SetGrid(1, 10);
@@ -243,7 +244,7 @@ namespace GridSnapToolbar
         /// <summary>
         /// Method to set the grid and snap to 5mm.
         /// </summary>
-        [Autodesk.AutoCAD.Runtime.CommandMethod("SNAPUNIT_5")]
+        [Autodesk.AutoCAD.Runtime.CommandMethod("SNAPUNIT_5", CommandFlags.Modal)]
         public void SnapUnit_5_Command()
         {
             SetGrid(5, 20);
@@ -252,7 +253,7 @@ namespace GridSnapToolbar
         /// <summary>
         /// Method to set the grid and snap to 10mm.
         /// </summary>
-        [Autodesk.AutoCAD.Runtime.CommandMethod("SNAPUNIT_10")]
+        [Autodesk.AutoCAD.Runtime.CommandMethod("SNAPUNIT_10", CommandFlags.Modal)]
         public void SnapUnit_10_Command()
         {
             SetGrid(10, 10);
@@ -261,7 +262,7 @@ namespace GridSnapToolbar
         /// <summary>
         /// Method to set the grid and snap to 50mm.
         /// </summary>
-        [Autodesk.AutoCAD.Runtime.CommandMethod("SNAPUNIT_50")]
+        [Autodesk.AutoCAD.Runtime.CommandMethod("SNAPUNIT_50", CommandFlags.Modal)]
         public void SnapUnit_50_Command()
         {
             SetGrid(50, 20);
@@ -270,7 +271,7 @@ namespace GridSnapToolbar
         /// <summary>
         /// Method to set the grid and snap to 100mm.
         /// </summary>
-        [Autodesk.AutoCAD.Runtime.CommandMethod("SNAPUNIT_100")]
+        [Autodesk.AutoCAD.Runtime.CommandMethod("SNAPUNIT_100", CommandFlags.Modal)]
         public void SnapUnit_100_Command()
         {
             SetGrid(100, 10);
@@ -279,7 +280,7 @@ namespace GridSnapToolbar
         /// <summary>
         /// Method to set the grid and snap to 500mm.
         /// </summary>
-        [Autodesk.AutoCAD.Runtime.CommandMethod("SNAPUNIT_500")]
+        [Autodesk.AutoCAD.Runtime.CommandMethod("SNAPUNIT_500", CommandFlags.Modal)]
         public void SnapUnit_500_Command()
         {
             SetGrid(500, 20);
@@ -288,7 +289,7 @@ namespace GridSnapToolbar
         /// <summary>
         /// Method to set the grid and snap to 1000mm. (1m)
         /// </summary>
-        [Autodesk.AutoCAD.Runtime.CommandMethod("SNAPUNIT_1000")]
+        [Autodesk.AutoCAD.Runtime.CommandMethod("SNAPUNIT_1000", CommandFlags.Modal)]
         public void SnapUnit_1000_Command()
         {
             SetGrid(100, 10);
