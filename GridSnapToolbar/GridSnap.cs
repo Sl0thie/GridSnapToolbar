@@ -19,18 +19,18 @@ namespace GridSnapToolbar
     /// </summary>
     public class GridSnap : IExtensionApplication
     {
-        string basePath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
-        AcadToolbarItem button0_01mm;
-        AcadToolbarItem button0_05mm;
-        AcadToolbarItem button0_1mm;
-        AcadToolbarItem button0_5mm;
-        AcadToolbarItem button1mm;
-        AcadToolbarItem button5mm;
-        AcadToolbarItem button10mm;
-        AcadToolbarItem button50mm;
-        AcadToolbarItem button100mm;
-        AcadToolbarItem button500mm;
-        AcadToolbarItem button1000mm;
+        private string basePath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+        private AcadToolbarItem button0_01mm;
+        private AcadToolbarItem button0_05mm;
+        private AcadToolbarItem button0_1mm;
+        private AcadToolbarItem button0_5mm;
+        private AcadToolbarItem button1mm;
+        private AcadToolbarItem button5mm;
+        private AcadToolbarItem button10mm;
+        private AcadToolbarItem button50mm;
+        private AcadToolbarItem button100mm;
+        private AcadToolbarItem button500mm;
+        private AcadToolbarItem button1000mm;
 
         /// <summary>
         /// AutoCAD calls this method to initialize the extension.
@@ -60,7 +60,7 @@ namespace GridSnapToolbar
         /// <summary>
         /// Sets the bitmaps for the toolbar items.
         /// </summary>
-        void SetBitMaps()
+        private void SetBitMaps()
         {
             button0_01mm.SetBitmaps(basePath + "/tbBut_0_01.bmp", basePath + "/tbBut_0_01.bmp");
             button0_05mm.SetBitmaps(basePath + "/tbBut_0_05.bmp", basePath + "/tbBut_0_05.bmp");
@@ -83,7 +83,7 @@ namespace GridSnapToolbar
             // Nothing to terminate/dispose.
         }
 
-        void SetGrid(double size, short spacing)
+        private void SetGrid(double size, short spacing)
         {
             // Get AutoCAD objects.
             Document doc = Application.DocumentManager.MdiActiveDocument;
@@ -121,7 +121,7 @@ namespace GridSnapToolbar
             Application.SetSystemVariable("CVPORT", currentCVPORT);
         }
 
-        void SetGridOld(double size, int spacing)
+        private void SetGridOld(double size, int spacing)
         {
             // Get AutoCAD objects.
             Document doc = Application.DocumentManager.MdiActiveDocument;
