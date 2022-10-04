@@ -6,6 +6,7 @@ using Autodesk.AutoCAD.DatabaseServices;
 using Autodesk.AutoCAD.GraphicsSystem;
 using System.Collections.Generic;
 using System.Threading;
+using Serilog;
 
 // http://docs.autodesk.com/ACD/2010/ENU/AutoCAD%20.NET%20Developer%27s%20Guide/index.html?url=WS1a9193826455f5ff2566ffd511ff6f8c7ca-4363.htm,topicNumber=d0e5006&_ga=2.108075330.1797667990.1645396265-1467573342.1641428789
 // https://help.autodesk.com/view/OARX/2022/ENU/?guid=OARX-ManagedRefGuide-_NET_Migration_Guide
@@ -19,7 +20,7 @@ namespace GridSnapToolbar
     /// </summary>
     public class GridSnap : IExtensionApplication
     {
-        private string basePath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+        private readonly string basePath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
         private AcadToolbarItem button0_01mm;
         private AcadToolbarItem button0_05mm;
         private AcadToolbarItem button0_1mm;
@@ -37,7 +38,15 @@ namespace GridSnapToolbar
         /// </summary>
         public void Initialize()
         {
-            AcadApplication cadApp = (AcadApplication)Autodesk.AutoCAD.ApplicationServices.Application.AcadApplication;
+            // Setup logging for the application.
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Debug()
+                .WriteTo.File("GridSnap - .txt", rollingInterval: RollingInterval.Day)
+                .CreateLogger();
+
+            Log.Information("Logging started.");
+
+            AcadApplication cadApp = (AcadApplication)Application.AcadApplication;
             AcadToolbar tb = cadApp.MenuGroups.Item(0).Toolbars.Add("GridSnap");
             tb.Dock(Autodesk.AutoCAD.Interop.Common.AcToolbarDockStatus.acToolbarDockLeft);
 
@@ -86,13 +95,11 @@ namespace GridSnapToolbar
         private void SetGrid(double size, short spacing)
         {
             // Get AutoCAD objects.
-            Document doc = Application.DocumentManager.MdiActiveDocument;
-            KernelDescriptor kd = new KernelDescriptor();
+            Document doc = Autodesk.AutoCAD.ApplicationServices.Core.Application.DocumentManager.MdiActiveDocument;
             Database database = doc.Database;
-            Autodesk.AutoCAD.EditorInput.Editor ed = doc.Editor;
 
             // Get the current CVPORT.
-            int currentCVPORT = System.Convert.ToInt32(Application.GetSystemVariable("CVPORT"));
+            int currentCVPORT = System.Convert.ToInt32(Autodesk.AutoCAD.ApplicationServices.Core.Application.GetSystemVariable("CVPORT"));
 
             // Get the other View Ports.
             List<int> viewPortNumbers = new List<int>();
@@ -104,102 +111,59 @@ namespace GridSnapToolbar
                     ViewportTableRecord symbol = (ViewportTableRecord)transaction.GetObject(id, OpenMode.ForWrite);
                     viewPortNumbers.Add(symbol.Number);
 
+                    Log.Information("Viewport Before");
+                    Log.Information($"Id {symbol.Id}");
+                    Log.Information($"Number {symbol.Number}");
+                    Log.Information($"CenterPoint {symbol.CenterPoint.X} {symbol.CenterPoint.Y}");
+                    Log.Information($"GridAdaptive {symbol.GridAdaptive}");
+                    Log.Information($"GridBoundToLimits {symbol.GridBoundToLimits}");
+                    Log.Information($"GridEnabled {symbol.GridEnabled}");
+                    Log.Information($"GridFollow {symbol.GridFollow}");
+                    Log.Information($"GridIncrements {symbol.GridIncrements.X} {symbol.GridIncrements.Y}");
+                    Log.Information($"GridMajor {symbol.GridMajor}");
+                    Log.Information($"GridSubdivisionRestricted {symbol.GridSubdivisionRestricted}");
+                    Log.Information($"Height {symbol.Height}");
+                    Log.Information($"UcsName {symbol.UcsName}");
+                    Log.Information($"UcsOrthographic {symbol.UcsOrthographic}");
+                    Log.Information($"ViewDirection {symbol.ViewDirection.X} {symbol.ViewDirection.Y} {symbol.ViewDirection.Z}");
+                    Log.Information($"Width {symbol.Width}");
+
                     symbol.GridEnabled = true;
-
                     symbol.GridIncrements = new Autodesk.AutoCAD.Geometry.Point2d(size,size);
-
                     symbol.GridMajor = spacing;
-
                     symbol.SnapIncrements = new Autodesk.AutoCAD.Geometry.Point2d(size , size);
+
+                    Log.Information("Viewport After");
+                    Log.Information($"Id {symbol.Id}");
+                    Log.Information($"Number {symbol.Number}");
+                    Log.Information($"CenterPoint {symbol.CenterPoint.X} {symbol.CenterPoint.Y}");
+                    Log.Information($"GridAdaptive {symbol.GridAdaptive}");
+                    Log.Information($"GridBoundToLimits {symbol.GridBoundToLimits}");
+                    Log.Information($"GridEnabled {symbol.GridEnabled}");
+                    Log.Information($"GridFollow {symbol.GridFollow}");
+                    Log.Information($"GridIncrements {symbol.GridIncrements.X} {symbol.GridIncrements.Y}");
+                    Log.Information($"GridMajor {symbol.GridMajor}");
+                    Log.Information($"GridSubdivisionRestricted {symbol.GridSubdivisionRestricted}");
+                    Log.Information($"Height {symbol.Height}");
+                    Log.Information($"UcsName {symbol.UcsName}");
+                    Log.Information($"UcsOrthographic {symbol.UcsOrthographic}");
+                    Log.Information($"ViewDirection {symbol.ViewDirection.X} {symbol.ViewDirection.Y} {symbol.ViewDirection.Z}");
+                    Log.Information($"Width {symbol.Width}\n");
                 }
+
                 transaction.Commit();
 
                 doc.Editor.UpdateTiledViewportsFromDatabase();
             }
 
             // Switch back to original view port.
-            Application.SetSystemVariable("CVPORT", currentCVPORT);
-        }
-
-        private void SetGridOld(double size, int spacing)
-        {
-            // Get AutoCAD objects.
-            Document doc = Application.DocumentManager.MdiActiveDocument;
-            KernelDescriptor kd = new KernelDescriptor();
-            Database database = doc.Database;
-            Autodesk.AutoCAD.EditorInput.Editor ed = doc.Editor;
-
-            // Get the current CVPORT.
-            int currentCVPORT = System.Convert.ToInt32(Application.GetSystemVariable("CVPORT"));
-            int currentCMDECHO = System.Convert.ToInt32(Application.GetSystemVariable("CMDECHO"));
-            if (currentCMDECHO != 0)
-            {
-                Application.SetSystemVariable("CMDECHO", 0);
-            }
-
-            ed.WriteMessage($"Grid Size {size} Spacing {spacing}\n");
-
-            //ed.Command(new object[] { "\x03\x03", "" });
-            //doc.SendStringToExecute("\x03\x03", false, true, false);
-
-            // Get the other View Ports.
-            List<int> viewPortNumbers = new List<int>();
-            using (Transaction transaction = database.TransactionManager.StartTransaction())
-            {
-                SymbolTable symTable = (SymbolTable)transaction.GetObject(database.ViewportTableId, OpenMode.ForRead);
-                foreach (ObjectId id in symTable)
-                {
-                    ViewportTableRecord symbol = (ViewportTableRecord)transaction.GetObject(id, OpenMode.ForRead);
-                    viewPortNumbers.Add(symbol.Number);
-
-                }
-                transaction.Commit();
-            }
-
-            //// Apply setting to all view ports.
-            //using (Transaction transaction = database.TransactionManager.StartTransaction())
-            //{
-            //    foreach (int viewPortNumber in viewPortNumbers)
-            //    {
-            //        Application.SetSystemVariable("CVPORT", viewPortNumber);
-            //        Thread.Sleep(10);
-            //        string sizeString = size.ToString() + ", " + size.ToString();
-            //        ed.Command(new object[] { "setvar", "SNAPUNIT", sizeString, "" });
-            //        ed.Command(new object[] { "setvar", "GRIDUNIT", sizeString, "" });
-            //        ed.Command(new object[] { "setvar", "GRIDMAJOR", spacing.ToString(), "" });
-            //    }
-
-            //    transaction.Commit();
-            //}
-
-            // Apply setting to all view ports.
-            foreach (int viewPortNumber in viewPortNumbers)
-            {
-                Application.SetSystemVariable("CVPORT", viewPortNumber);
-
-                
-
-                Thread.Sleep(100);
-                string sizeString = size.ToString("#.00") + ", " + size.ToString("#");
-                ed.Command(new object[] { "._setvar", "SNAPUNIT", sizeString, "" });
-                Thread.Sleep(100);
-
-                ed.Command(new object[] { "._setvar", "GRIDUNIT", sizeString, "" });
-                Thread.Sleep(100);
-
-                ed.Command(new object[] { "._setvar", "GRIDMAJOR", spacing.ToString(), "" });
-                Thread.Sleep(100);
-            }
-
-            // Switch back to original view port.
-            Application.SetSystemVariable("CVPORT", currentCVPORT);
-            Application.SetSystemVariable("CMDECHO", currentCMDECHO);
+            Autodesk.AutoCAD.ApplicationServices.Core.Application.SetSystemVariable("CVPORT", currentCVPORT);
         }
 
         /// <summary>
         /// Method to set the grid and snap to 0.01mm.
         /// </summary>
-        [Autodesk.AutoCAD.Runtime.CommandMethod("SNAPUNIT_0_01", CommandFlags.Modal)]
+        [CommandMethod("SNAPUNIT_0_01", CommandFlags.Modal)]
         public void SnapUnit_0_01_Command()
         {
             SetGrid(0.01, 10);
@@ -208,7 +172,7 @@ namespace GridSnapToolbar
         /// <summary>
         /// Method to set the grid and snap to 0.05mm.
         /// </summary>
-        [Autodesk.AutoCAD.Runtime.CommandMethod("SNAPUNIT_0_05", CommandFlags.Modal)]
+        [CommandMethod("SNAPUNIT_0_05", CommandFlags.Modal)]
         public void SnapUnit_0_05_Command()
         {
             SetGrid(0.05, 20);
@@ -217,7 +181,7 @@ namespace GridSnapToolbar
         /// <summary>
         /// Method to set the grid and snap to 0.1mm.
         /// </summary>
-        [Autodesk.AutoCAD.Runtime.CommandMethod("SNAPUNIT_0_1", CommandFlags.Modal)]
+        [CommandMethod("SNAPUNIT_0_1", CommandFlags.Modal)]
         public void SnapUnit_0_1_Command()
         {
             SetGrid(0.1, 10);
@@ -226,7 +190,7 @@ namespace GridSnapToolbar
         /// <summary>
         /// Method to set the grid and snap to 0.5mm.
         /// </summary>
-        [Autodesk.AutoCAD.Runtime.CommandMethod("SNAPUNIT_0_5", CommandFlags.Modal)]
+        [CommandMethod("SNAPUNIT_0_5", CommandFlags.Modal)]
         public void SnapUnit_0_5_Command()
         {
             SetGrid(0.5, 20);
@@ -235,7 +199,7 @@ namespace GridSnapToolbar
         /// <summary>
         /// Method to set the grid and snap to 1mm.
         /// </summary>
-        [Autodesk.AutoCAD.Runtime.CommandMethod("SNAPUNIT_1", CommandFlags.Modal)]
+        [CommandMethod("SNAPUNIT_1", CommandFlags.Modal)]
         public void SnapUnit_1_Command()
         {
             SetGrid(1, 10);
@@ -244,7 +208,7 @@ namespace GridSnapToolbar
         /// <summary>
         /// Method to set the grid and snap to 5mm.
         /// </summary>
-        [Autodesk.AutoCAD.Runtime.CommandMethod("SNAPUNIT_5", CommandFlags.Modal)]
+        [CommandMethod("SNAPUNIT_5", CommandFlags.Modal)]
         public void SnapUnit_5_Command()
         {
             SetGrid(5, 20);
@@ -253,7 +217,7 @@ namespace GridSnapToolbar
         /// <summary>
         /// Method to set the grid and snap to 10mm.
         /// </summary>
-        [Autodesk.AutoCAD.Runtime.CommandMethod("SNAPUNIT_10", CommandFlags.Modal)]
+        [CommandMethod("SNAPUNIT_10", CommandFlags.Modal)]
         public void SnapUnit_10_Command()
         {
             SetGrid(10, 10);
@@ -262,7 +226,7 @@ namespace GridSnapToolbar
         /// <summary>
         /// Method to set the grid and snap to 50mm.
         /// </summary>
-        [Autodesk.AutoCAD.Runtime.CommandMethod("SNAPUNIT_50", CommandFlags.Modal)]
+        [CommandMethod("SNAPUNIT_50", CommandFlags.Modal)]
         public void SnapUnit_50_Command()
         {
             SetGrid(50, 20);
@@ -271,7 +235,7 @@ namespace GridSnapToolbar
         /// <summary>
         /// Method to set the grid and snap to 100mm.
         /// </summary>
-        [Autodesk.AutoCAD.Runtime.CommandMethod("SNAPUNIT_100", CommandFlags.Modal)]
+        [CommandMethod("SNAPUNIT_100", CommandFlags.Modal)]
         public void SnapUnit_100_Command()
         {
             SetGrid(100, 10);
@@ -280,7 +244,7 @@ namespace GridSnapToolbar
         /// <summary>
         /// Method to set the grid and snap to 500mm.
         /// </summary>
-        [Autodesk.AutoCAD.Runtime.CommandMethod("SNAPUNIT_500", CommandFlags.Modal)]
+        [CommandMethod("SNAPUNIT_500", CommandFlags.Modal)]
         public void SnapUnit_500_Command()
         {
             SetGrid(500, 20);
@@ -289,7 +253,7 @@ namespace GridSnapToolbar
         /// <summary>
         /// Method to set the grid and snap to 1000mm. (1m)
         /// </summary>
-        [Autodesk.AutoCAD.Runtime.CommandMethod("SNAPUNIT_1000", CommandFlags.Modal)]
+        [CommandMethod("SNAPUNIT_1000", CommandFlags.Modal)]
         public void SnapUnit_1000_Command()
         {
             SetGrid(100, 10);
